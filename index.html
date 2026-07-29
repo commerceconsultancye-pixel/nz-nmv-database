@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NZ Valuation Database — Non-Market Valuation & Ecosystem Services</title>
+  <meta name="description" content="The only comprehensive database of non-market valuation and ecosystem services studies conducted in New Zealand, covering water, land, biodiversity, recreation and agricultural ecosystems." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ── Tokens ── */
+    :root {
+      --green-dark:   #1a3d2b;
+      --green-mid:    #2d6a4f;
+      --green-light:  #52b788;
+      --green-pale:   #d8f3dc;
+      --teal:         #1b7f79;
+      --teal-pale:    #d0f0ed;
+      --sand:         #f7f4ee;
+      --sand-mid:     #ece8e0;
+      --white:        #ffffff;
+      --ink:          #1c1c1a;
+      --ink-mid:      #4a4a46;
+      --ink-light:    #8a8a84;
+      --ink-faint:    #c4c4be;
+      --border:       #e2dfd8;
+      --border-mid:   #c8c4bc;
+      --accent:       #2d6a4f;
+      --accent-pale:  #eaf4ee;
+
+      --radius-sm:  4px;
+      --radius:     8px;
+      --radius-lg:  12px;
+
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md:  0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+
+      --font-body:  'Inter', system-ui, sans-serif;
+      --font-mono:  'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--sand);
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .site-wrap { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Header ── */
+    header {
+      background: var(--green-dark);
+      color: var(--white);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-md);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      gap: 1rem;
+    }
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--green-light);
+      letter-spacing: -0.02em;
+    }
+    .logo-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .last-updated {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+    }
+    .btn-subscribe {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--green-light);
+      background: transparent;
+      color: var(--green-light);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-subscribe:hover {
+      background: var(--green-light);
+      color: var(--green-dark);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      color: var(--white);
+      padding: 3rem 1.5rem 2.5rem;
+    }
+    .hero-inner { max-width: 1200px; margin: 0 auto; }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .hero-stat { }
+    .hero-stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--green-light);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .hero-stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Tier bar ── */
+    .tier-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0.625rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tier-label { font-size: 11px; color: var(--ink-light); }
+    .tier-pill {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .tier-free  { background: #e6f4ec; color: #1a6b3a; }
+    .tier-paid  { background: #ede9fe; color: #5b21b6; }
+    .tier-dot   { color: var(--ink-faint); font-size: 16px; line-height: 1; }
+
+    /* ── Main content ── */
+    main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-mid);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .tab-btn:hover:not(.active) { color: var(--ink); }
+    .tab-icon { font-size: 15px; }
+
+    /* ── Panel ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Search & filters ── */
+    .search-block {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .search-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .search-input {
+      flex: 1;
+      font-size: 13px;
+      font-family: var(--font-body);
+      padding: 0 12px;
+      height: 36px;
+      border: 1px solid var(--border-mid);
+      border-radius: var(--radius);
+      background: var(--sand);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus { border-color: var(--accent); background: var(--white); }
+    .search-input::placeholder { color: var(--ink-faint); }
+    .btn-search, .btn-clear {
+      height: 36px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-family: var(--font-body);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-mid);
+      background: var(--sand);
+      color: var(--ink-mid);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-search { background: var(--accent); border-color: var(--accent); color: var(--white); }
+    .btn-search:hover { background: var(--green-dark); }
+    .btn-clear:hover { background: var(--border); }
+    .filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-select {
+      font-size: 12px;
+      font-family: var(--font-body);
+      height: 30px;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      color: var(--ink-mid);
+      cursor: pointer;
+    }
+    .filter-select:focus { outline: none; border-color: var(--accent); }
+
+    /* ── Results bar ── */
+    .results-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .results-count { font-size: 12px; color: var(--ink-light); }
+    .btn-download {
+      font-size: 12px;
+      font-family: var(--font-body);
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-mid);
+      background: var(--white);
+      color: var(--ink-mid);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-download:hover { background: var(--sand); border-color: var(--accent); color: var(--accent); }
+
+    /* ── Table ── */
+    .table-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 860px;
+    }
+    thead th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      padding: 10px 12px;
+      background: var(--sand);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    thead th.th-locked {
+      color: #7c3aed;
+      background: #f5f3ff;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--sand); }
+    tbody td {
+      padding: 9px 12px;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    td.td-author { font-weight: 500; white-space: nowrap; }
+    td.td-year   { color: var(--ink-mid); white-space: nowrap; }
+    td.td-region { color: var(--ink-mid); white-space: nowrap; }
+    td.td-topic  { max-width: 180px; font-size: 11px; }
+    td.td-wtp    { font-family: var(--font-mono); font-size: 11px; white-space: nowrap; }
+    td.td-std    { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--accent); }
+
+    /* locked cell */
+    .locked-cell {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--ink-faint);
+      font-size: 11px;
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .locked-cell svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .badge-CVM { background: #dbeafe; color: #1e40af; }
+    .badge-TCM { background: #dcfce7; color: #166534; }
+    .badge-CE  { background: #ede9fe; color: #5b21b6; }
+    .badge-HP  { background: #fef9c3; color: #854d0e; }
+
+    .eco-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .eco-Freshwater { background: #dbeafe; color: #1e40af; }
+    .eco-Wetland    { background: #d1fae5; color: #065f46; }
+    .eco-Grassland  { background: #dcfce7; color: #166534; }
+    .eco-Forest     { background: #fef3c7; color: #92400e; }
+    .eco-Coastal    { background: #ede9fe; color: #5b21b6; }
+    .eco-Marine     { background: #fee2e2; color: #991b1b; }
+
+    .es-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .es-Regulating   { background: #dbeafe; color: #1e40af; }
+    .es-Cultural     { background: #fef3c7; color: #92400e; }
+    .es-Provisioning { background: #dcfce7; color: #166534; }
+    .es-Supporting   { background: #ede9fe; color: #5b21b6; }
+
+    /* ── Upgrade banner ── */
+    .upgrade-banner {
+      margin: 1.25rem 0;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .upgrade-text { }
+    .upgrade-text h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .upgrade-text p {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.5;
+    }
+    .upgrade-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-monthly {
+      font-size: 12px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.25);
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-monthly:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+    .btn-annual {
+      font-size: 12px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--green-light);
+      color: var(--green-dark);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-annual:hover { background: #74c69d; }
+
+    /* ── Loading state ── */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: var(--ink-light);
+      font-size: 13px;
+    }
+    .error-msg {
+      text-align: center;
+      padding: 2rem;
+      color: #991b1b;
+      background: #fee2e2;
+      border-radius: var(--radius);
+      font-size: 13px;
+      margin: 1rem 0;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--ink-light);
+      font-size: 13px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--green-dark);
+      color: rgba(255,255,255,0.5);
+      padding: 2rem 1.5rem;
+      margin-top: 3rem;
+      font-size: 12px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-logo { font-size: 14px; font-weight: 600; color: var(--green-light); margin-bottom: 4px; }
+    .footer-cite {
+      max-width: 480px;
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 4px; }
+    .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    .footer-links a:hover { color: var(--green-light); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 24px; }
+      .hero-stats { gap: 1.25rem; }
+      .upgrade-banner { flex-direction: column; }
+      .upgrade-actions { width: 100%; }
+      .btn-monthly, .btn-annual { flex: 1; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <span class="logo-mark">NZ NMV Database</span>
+      <span class="logo-sub">Non-Market Valuation &amp; Ecosystem Services</span>
+    </a>
+    <div class="header-meta">
+      <span class="last-updated" id="headerLastUpdated"></span>
+      <button class="btn-subscribe" onclick="scrollToUpgrade()">Subscribe for full access</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">New Zealand · Environmental Economics</div>
+    <h1>NZ Valuation Database</h1>
+    <p>The only comprehensive database of non-market valuation and ecosystem services studies specific to New Zealand — spanning water, land, biodiversity, recreation and agricultural ecosystems. Built for policy analysis, benefit transfer, and natural capital accounting.</p>
+    <div class="hero-stats" id="heroStats">
+      <div class="hero-stat">
+        <div class="hero-stat-value" id="statNMV">—</div>
+        <div class="hero-stat-label">NMV studies</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" id="statES">—</div>
+        <div class="hero-stat-label">ES value records</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">6</div>
+        <div class="hero-stat-label">Ecosystem types</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" id="statYears">—</div>
+        <div class="hero-stat-label">Years covered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tier bar ── -->
+<div style="background:var(--white); border-bottom:1px solid var(--border);">
+  <div class="tier-bar">
+    <span class="tier-label">Free access:</span>
+    <span class="tier-pill tier-free">Author · Region · Method · WTP value · Ecosystem type · ES category · Download CSV</span>
+    <span class="tier-dot">·</span>
+    <span class="tier-label">Subscribed:</span>
+    <span class="tier-pill tier-paid">Standardised NZ$/ha/yr · Sample size · Model specification · Full citation · Update alerts</span>
+  </div>
+</div>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('nmv', this)">
+      <span class="tab-icon">📄</span> NMV studies
+    </button>
+    <button class="tab-btn" onclick="switchTab('es', this)">
+      <span class="tab-icon">🌿</span> Ecosystem services values
+    </button>
+  </div>
+
+  <!-- ── NMV Panel ── -->
+  <div id="panel-nmv" class="panel active">
+    <div class="search-block">
+      <div class="search-row">
+        <input class="search-input" type="text" id="nmvSearch" placeholder="Search by keyword, author, region, ecosystem type, ES sub-type…" />
+        <button class="btn-search" onclick="filterNMV()">Search</button>
+        <button class="btn-clear" onclick="clearNMV()">Clear</button>
+      </div>
+      <div class="filters">
+        <select class="filter-select" id="nmvMethod" onchange="filterNMV()">
+          <option value="">All valuation methods</option>
+          <option value="CVM">CVM — contingent valuation</option>
+          <option value="TCM">TCM — travel cost</option>
+          <option value="CE">Choice experiment</option>
+          <option value="HP">Hedonic pricing</option>
+        </select>
+        <select class="filter-select" id="nmvEco" onchange="filterNMV()">
+          <option value="">All ecosystem types</option>
+          <option value="Freshwater">Freshwater</option>
+          <option value="Wetland">Wetland</option>
+          <option value="Grassland">Grassland</option>
+          <option value="Forest">Forest</option>
+          <option value="Coastal">Coastal</option>
+          <option value="Marine">Marine</option>
+        </select>
+        <select class="filter-select" id="nmvEScat" onchange="filterNMV()">
+          <option value="">All ES categories</option>
+          <option value="Regulating">Regulating</option>
+          <option value="Cultural">Cultural</option>
+          <option value="Provisioning">Provisioning</option>
+          <option value="Supporting">Supporting</option>
+        </select>
+        <select class="filter-select" id="nmvRegion" onchange="filterNMV()">
+          <option value="">All regions</option>
+          <option value="Auckland">Auckland</option>
+          <option value="Waikato">Waikato</option>
+          <option value="Canterbury">Canterbury</option>
+          <option value="Wellington">Wellington</option>
+          <option value="Manawatu">Manawatu</option>
+          <option value="National">National</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="results-bar">
+      <span class="results-count" id="nmvCount">Loading…</span>
+      <button class="btn-download" onclick="downloadCSV('nmv')">⬇ Download free data (CSV)</button>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Author(s)</th>
+            <th>Year</th>
+            <th>Region</th>
+            <th>Topic</th>
+            <th>Method</th>
+            <th>Ecosystem type</th>
+            <th>ES category</th>
+            <th>ES sub-type</th>
+            <th>WTP value</th>
+            <th class="th-locked">🔒 NZ$/ha/yr</th>
+            <th class="th-locked">🔒 Sample n</th>
+            <th class="th-locked">🔒 Full citation</th>
+          </tr>
+        </thead>
+        <tbody id="nmvBody">
+          <tr><td colspan="12" class="loading">Loading studies…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── ES Panel ── -->
+  <div id="panel-es" class="panel">
+    <div class="search-block">
+      <div class="search-row">
+        <input class="search-input" type="text" id="esSearch" placeholder="Search by ecosystem type, ES service, region…" />
+        <button class="btn-search" onclick="filterES()">Search</button>
+        <button class="btn-clear" onclick="clearES()">Clear</button>
+      </div>
+      <div class="filters">
+        <select class="filter-select" id="esEco" onchange="filterES()">
+          <option value="">All ecosystem types</option>
+          <option value="Freshwater">Freshwater</option>
+          <option value="Wetland">Wetland</option>
+          <option value="Grassland">Grassland</option>
+          <option value="Forest">Forest</option>
+          <option value="Coastal">Coastal</option>
+          <option value="Marine">Marine</option>
+        </select>
+        <select class="filter-select" id="esCat" onchange="filterES()">
+          <option value="">All ES categories</option>
+          <option value="Regulating">Regulating</option>
+          <option value="Cultural">Cultural</option>
+          <option value="Provisioning">Provisioning</option>
+          <option value="Supporting">Supporting</option>
+        </select>
+        <select class="filter-select" id="esSub" onchange="filterES()">
+          <option value="">All ES sub-types</option>
+          <option value="Water purification">Water purification</option>
+          <option value="Carbon sequestration">Carbon sequestration</option>
+          <option value="Flood regulation">Flood regulation</option>
+          <option value="Biodiversity">Biodiversity</option>
+          <option value="Recreation">Recreation</option>
+          <option value="Erosion control">Erosion control</option>
+          <option value="Fisheries">Fisheries</option>
+          <option value="Food production">Food production</option>
+          <option value="Water supply">Water supply</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="results-bar">
+      <span class="results-count" id="esCount">Loading…</span>
+      <button class="btn-download" onclick="downloadCSV('es')">⬇ Download free data (CSV)</button>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Ecosystem type</th>
+            <th>ES category</th>
+            <th>ES sub-type</th>
+            <th>Region</th>
+            <th>Value range (NZ$)</th>
+            <th>Unit</th>
+            <th>Studies (n)</th>
+            <th class="th-locked">🔒 Std. NZ$/ha/yr</th>
+            <th class="th-locked">🔒 Confidence interval</th>
+            <th class="th-locked">🔒 Benefit transfer notes</th>
+            <th class="th-locked">🔒 Source studies</th>
+          </tr>
+        </thead>
+        <tbody id="esBody">
+          <tr><td colspan="11" class="loading">Loading ES values…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Upgrade banner -->
+  <div class="upgrade-banner" id="upgradeBanner">
+    <div class="upgrade-text">
+      <h3>Unlock full database access</h3>
+      <p>Standardised NZ$/ha/year values for benefit transfer · Confidence intervals · Model specifications · Full citations · Email alerts when new studies are added</p>
+    </div>
+    <div class="upgrade-actions">
+      <button class="btn-monthly" onclick="alert('Monthly subscription — contact wei@[yourdomain].nz for access')">Monthly plan</button>
+      <button class="btn-annual" onclick="alert('Annual subscription — contact wei@[yourdomain].nz for access')">Annual plan — best value</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">NZ NMV Database</div>
+      <p class="footer-cite" id="footerCite">Loading citation…</p>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:contact@yourdomain.nz">Contact</a>
+      <a href="#" onclick="alert('Terms of use — coming soon')">Terms of use</a>
+      <a href="#" onclick="alert('Citation guide — coming soon')">How to cite</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════
+   DATA LOADING
+   Reads from /data/nmv_studies.json and /data/es_values.json
+   To update data: edit those JSON files only — do not touch this script.
+   ════════════════════════════════════════════════ */
+
+let NMV_DATA = [];
+let ES_DATA  = [];
+let NMV_ALL  = [];
+let ES_ALL   = [];
+
+async function loadData() {
+  try {
+    const [nmvRes, esRes] = await Promise.all([
+      fetch('./data/nmv_studies.json'),
+      fetch('./data/es_values.json')
+    ]);
+
+    if (!nmvRes.ok || !esRes.ok) throw new Error('Failed to load data files');
+
+    const nmvJson = await nmvRes.json();
+    const esJson  = await esRes.json();
+
+    NMV_DATA = nmvJson.studies || [];
+    ES_DATA  = esJson.records  || [];
+    NMV_ALL  = [...NMV_DATA];
+    ES_ALL   = [...ES_DATA];
+
+    // Update header
+    const lastUpdated = nmvJson._metadata?.last_updated || '';
+    document.getElementById('headerLastUpdated').textContent = lastUpdated ? `Updated ${lastUpdated}` : '';
+
+    // Update hero stats
+    document.getElementById('statNMV').textContent = nmvJson._metadata?.total_entries || NMV_DATA.length;
+    document.getElementById('statES').textContent  = ES_DATA.length;
+    document.getElementById('statYears').textContent = '1984–2013';
+
+    // Footer citation
+    document.getElementById('footerCite').textContent =
+      `Original database compiled at Lincoln University. Current version maintained by Massey University. ` +
+      `When using this database, please cite: NZ NMV Database (${new Date().getFullYear()}), maintained by [Your Name], Massey University.`;
+
+    renderNMV(NMV_DATA);
+    renderES(ES_DATA);
+
+  } catch (err) {
+    console.error('Data load error:', err);
+    document.getElementById('nmvBody').innerHTML =
+      `<tr><td colspan="12"><div class="error-msg">Could not load data. If running locally, use a local server (e.g. <code>npx serve .</code>). Error: ${err.message}</div></td></tr>`;
+    document.getElementById('esBody').innerHTML =
+      `<tr><td colspan="11"><div class="error-msg">Could not load data. ${err.message}</div></td></tr>`;
+  }
+}
+
+/* ════════════════════════════════════════════════
+   RENDER FUNCTIONS
+   ════════════════════════════════════════════════ */
+
+const LOCK_ICON = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5 7V5a3 3 0 016 0v2"/></svg>`;
+
+function lockCell() {
+  return `<div class="locked-cell">${LOCK_ICON} Subscribe</div>`;
+}
+
+function renderNMV(data) {
+  const tbody = document.getElementById('nmvBody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="12" class="empty-state">No studies match your filters. Try broadening your search.</td></tr>`;
+    document.getElementById('nmvCount').textContent = '0 studies found';
+    return;
+  }
+
+  tbody.innerHTML = data.map(s => `
+    <tr>
+      <td class="td-author">${escHtml(s.author)}</td>
+      <td class="td-year">${s.year}</td>
+      <td class="td-region">${escHtml(s.region)}</td>
+      <td class="td-topic">${escHtml(s.topic)}</td>
+      <td><span class="badge badge-${s.method}">${s.method}</span></td>
+      <td><span class="eco-badge eco-${s.ecosystem_type}">${s.ecosystem_type}</span></td>
+      <td><span class="es-badge es-${s.es_category}">${s.es_category}</span></td>
+      <td style="font-size:11px;color:var(--ink-mid)">${escHtml(s.es_subtype)}</td>
+      <td class="td-wtp">${escHtml(s.wtp_value)}</td>
+      <td>${lockCell()}</td>
+      <td>${lockCell()}</td>
+      <td>${lockCell()}</td>
+    </tr>`).join('');
+
+  document.getElementById('nmvCount').textContent =
+    `Showing ${data.length} of ${NMV_ALL.length} studies`;
+}
+
+function renderES(data) {
+  const tbody = document.getElementById('esBody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="11" class="empty-state">No ES records match your filters.</td></tr>`;
+    document.getElementById('esCount').textContent = '0 records found';
+    return;
+  }
+
+  tbody.innerHTML = data.map(s => `
+    <tr>
+      <td><span class="eco-badge eco-${s.ecosystem_type}">${s.ecosystem_type}</span></td>
+      <td><span class="es-badge es-${s.es_category}">${s.es_category}</span></td>
+      <td style="font-size:11px;font-weight:500">${escHtml(s.es_subtype)}</td>
+      <td style="font-size:11px;color:var(--ink-mid)">${escHtml(s.region)}</td>
+      <td class="td-wtp">$${s.value_range_low}–$${s.value_range_high}</td>
+      <td style="font-size:10px;color:var(--ink-light)">${escHtml(s.value_unit)}</td>
+      <td style="font-size:11px;text-align:center;color:var(--ink-mid)">${s.studies_n}</td>
+      <td>${lockCell()}</td>
+      <td>${lockCell()}</td>
+      <td>${lockCell()}</td>
+      <td>${lockCell()}</td>
+    </tr>`).join('');
+
+  document.getElementById('esCount').textContent =
+    `Showing ${data.length} of ${ES_ALL.length} ES value records`;
+}
+
+/* ════════════════════════════════════════════════
+   FILTER FUNCTIONS
+   ════════════════════════════════════════════════ */
+
+function filterNMV() {
+  const q      = document.getElementById('nmvSearch').value.toLowerCase().trim();
+  const method = document.getElementById('nmvMethod').value;
+  const eco    = document.getElementById('nmvEco').value;
+  const escat  = document.getElementById('nmvEScat').value;
+  const region = document.getElementById('nmvRegion').value;
+
+  const filtered = NMV_ALL.filter(s =>
+    (!q      || s.topic.toLowerCase().includes(q) ||
+                s.author.toLowerCase().includes(q) ||
+                s.es_subtype.toLowerCase().includes(q) ||
+                s.region.toLowerCase().includes(q)) &&
+    (!method || s.method === method) &&
+    (!eco    || s.ecosystem_type === eco) &&
+    (!escat  || s.es_category === escat) &&
+    (!region || s.region === region)
+  );
+  renderNMV(filtered);
+}
+
+function filterES() {
+  const q   = document.getElementById('esSearch').value.toLowerCase().trim();
+  const eco = document.getElementById('esEco').value;
+  const cat = document.getElementById('esCat').value;
+  const sub = document.getElementById('esSub').value;
+
+  const filtered = ES_ALL.filter(s =>
+    (!q   || s.es_subtype.toLowerCase().includes(q) ||
+              s.ecosystem_type.toLowerCase().includes(q) ||
+              s.region.toLowerCase().includes(q)) &&
+    (!eco || s.ecosystem_type === eco) &&
+    (!cat || s.es_category === cat) &&
+    (!sub || s.es_subtype === sub)
+  );
+  renderES(filtered);
+}
+
+function clearNMV() {
+  document.getElementById('nmvSearch').value = '';
+  ['nmvMethod','nmvEco','nmvEScat','nmvRegion'].forEach(id =>
+    document.getElementById(id).value = '');
+  renderNMV(NMV_ALL);
+}
+
+function clearES() {
+  document.getElementById('esSearch').value = '';
+  ['esEco','esCat','esSub'].forEach(id =>
+    document.getElementById(id).value = '');
+  renderES(ES_ALL);
+}
+
+/* ════════════════════════════════════════════════
+   CSV DOWNLOAD (free tier only)
+   ════════════════════════════════════════════════ */
+
+function downloadCSV(type) {
+  let csv = '';
+  if (type === 'nmv') {
+    const headers = ['ID','Author','Year','Region','Topic','Method','Ecosystem type','ES category','ES sub-type','WTP value'];
+    const rows = NMV_ALL.map(s => [
+      s.id, s.author, s.year, s.region, s.topic,
+      s.method, s.ecosystem_type, s.es_category, s.es_subtype, s.wtp_value
+    ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
+    csv = [headers.join(','), ...rows].join('\n');
+    triggerDownload(csv, 'nz-nmv-database-free.csv');
+  } else {
+    const headers = ['ID','Ecosystem type','ES category','ES sub-type','Region','Value range low (NZ$)','Value range high (NZ$)','Unit','Studies n'];
+    const rows = ES_ALL.map(s => [
+      s.id, s.ecosystem_type, s.es_category, s.es_subtype,
+      s.region, s.value_range_low, s.value_range_high, s.value_unit, s.studies_n
+    ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
+    csv = [headers.join(','), ...rows].join('\n');
+    triggerDownload(csv, 'nz-es-values-free.csv');
+  }
+}
+
+function triggerDownload(content, filename) {
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ════════════════════════════════════════════════
+   UI HELPERS
+   ════════════════════════════════════════════════ */
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+function scrollToUpgrade() {
+  document.getElementById('upgradeBanner').scrollIntoView({ behavior: 'smooth' });
+}
+
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/* ── Kick off ── */
+loadData();
+</script>
+</body>
+</html>
