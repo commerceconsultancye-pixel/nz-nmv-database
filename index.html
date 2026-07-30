@@ -783,6 +783,9 @@ let NMV_DATA = [];
 let ES_DATA  = [];
 let NMV_ALL  = [];
 let ES_ALL   = [];
+let NMV_CURRENT = []; // currently displayed/filtered results
+let ES_CURRENT  = []; // currently displayed/filtered results
+const DEFAULT_DISPLAY = 10; // number of studies shown before searching
 
 async function loadData() {
   try {
@@ -815,8 +818,8 @@ async function loadData() {
       `Original database compiled at Lincoln University. Current version maintained by Massey University. ` +
       `When using this database, please cite: NZ NMV Database (${new Date().getFullYear()}), maintained by [Your Name], Massey University.`;
 
-    renderNMV(NMV_DATA);
-    renderES(ES_DATA);
+    renderNMV(NMV_DATA.slice(0, DEFAULT_DISPLAY), true);
+    renderES(ES_DATA.slice(0, DEFAULT_DISPLAY), true);
 
   } catch (err) {
     console.error('Data load error:', err);
@@ -837,7 +840,8 @@ function lockCell() {
   return `<div class="locked-cell">${LOCK_ICON} Subscribe</div>`;
 }
 
-function renderNMV(data) {
+function renderNMV(data, isDefault = false) {
+  NMV_CURRENT = data;
   const tbody = document.getElementById('nmvBody');
   if (!data.length) {
     tbody.innerHTML = `<tr><td colspan="12" class="empty-state">No studies match your filters. Try broadening your search.</td></tr>`;
@@ -861,11 +865,17 @@ function renderNMV(data) {
       <td>${lockCell()}</td>
     </tr>`).join('');
 
-  document.getElementById('nmvCount').textContent =
-    `Showing ${data.length} of ${NMV_ALL.length} studies`;
+  if (isDefault) {
+    document.getElementById('nmvCount').textContent =
+      `Showing ${data.length} of ${NMV_ALL.length} studies — use search or filters to explore all`;
+  } else {
+    document.getElementById('nmvCount').textContent =
+      `Showing ${data.length} of ${NMV_ALL.length} studies`;
+  }
 }
 
-function renderES(data) {
+function renderES(data, isDefault = false) {
+  ES_CURRENT = data;
   const tbody = document.getElementById('esBody');
   if (!data.length) {
     tbody.innerHTML = `<tr><td colspan="11" class="empty-state">No ES records match your filters.</td></tr>`;
@@ -888,8 +898,13 @@ function renderES(data) {
       <td>${lockCell()}</td>
     </tr>`).join('');
 
-  document.getElementById('esCount').textContent =
-    `Showing ${data.length} of ${ES_ALL.length} ES value records`;
+  if (isDefault) {
+    document.getElementById('esCount').textContent =
+      `Showing ${data.length} of ${ES_ALL.length} ES value records — use search or filters to explore all`;
+  } else {
+    document.getElementById('esCount').textContent =
+      `Showing ${data.length} of ${ES_ALL.length} ES value records`;
+  }
 }
 
 /* ════════════════════════════════════════════════
@@ -913,7 +928,8 @@ function filterNMV() {
     (!escat  || s.es_category === escat) &&
     (!region || s.region === region)
   );
-  renderNMV(filtered);
+  const hasFilter = q || method || eco || escat || region;
+  renderNMV(hasFilter ? filtered : filtered.slice(0, DEFAULT_DISPLAY), !hasFilter);
 }
 
 function filterES() {
@@ -930,21 +946,22 @@ function filterES() {
     (!cat || s.es_category === cat) &&
     (!sub || s.es_subtype === sub)
   );
-  renderES(filtered);
+  const hasFilter = q || eco || cat || sub;
+  renderES(hasFilter ? filtered : filtered.slice(0, DEFAULT_DISPLAY), !hasFilter);
 }
 
 function clearNMV() {
   document.getElementById('nmvSearch').value = '';
   ['nmvMethod','nmvEco','nmvEScat','nmvRegion'].forEach(id =>
     document.getElementById(id).value = '');
-  renderNMV(NMV_ALL);
+  renderNMV(NMV_ALL.slice(0, DEFAULT_DISPLAY), true);
 }
 
 function clearES() {
   document.getElementById('esSearch').value = '';
   ['esEco','esCat','esSub'].forEach(id =>
     document.getElementById(id).value = '');
-  renderES(ES_ALL);
+  renderES(ES_ALL.slice(0, DEFAULT_DISPLAY), true);
 }
 
 /* ════════════════════════════════════════════════
@@ -954,16 +971,19 @@ function clearES() {
 function downloadCSV(type) {
   let csv = '';
   if (type === 'nmv') {
+    const data = NMV_CURRENT.length ? NMV_CURRENT : NMV_ALL.slice(0, DEFAULT_DISPLAY);
     const headers = ['ID','Author','Year','Region','Topic','Method','Ecosystem type','ES category','ES sub-type','WTP value'];
-    const rows = NMV_ALL.map(s => [
+    const rows = data.map(s => [
       s.id, s.author, s.year, s.region, s.topic,
       s.method, s.ecosystem_type, s.es_category, s.es_subtype, s.wtp_value
     ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
     csv = [headers.join(','), ...rows].join('\n');
-    triggerDownload(csv, 'nz-nmv-database-free.csv');
+    const label = data.length < NMV_ALL.length ? `filtered-${data.length}` : 'free';
+    triggerDownload(csv, `nz-nmv-database-${label}.csv`);
   } else {
+    const data = ES_CURRENT.length ? ES_CURRENT : ES_ALL.slice(0, DEFAULT_DISPLAY);
     const headers = ['ID','Ecosystem type','ES category','ES sub-type','Region','Value range low (NZ$)','Value range high (NZ$)','Unit','Studies n'];
-    const rows = ES_ALL.map(s => [
+    const rows = data.map(s => [
       s.id, s.ecosystem_type, s.es_category, s.es_subtype,
       s.region, s.value_range_low, s.value_range_high, s.value_unit, s.studies_n
     ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
