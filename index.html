@@ -580,10 +580,10 @@
 <div style="background:var(--white); border-bottom:1px solid var(--border);">
   <div class="tier-bar">
     <span class="tier-label">Free access:</span>
-    <span class="tier-pill tier-free">Author · Region · Method · WTP value · Ecosystem type · ES category · Download CSV</span>
+    <span class="tier-pill tier-free">Author · Year · Region · Title · Method · WTP value · Full citation · Download CSV</span>
     <span class="tier-dot">·</span>
     <span class="tier-label">Subscribed:</span>
-    <span class="tier-pill tier-paid">Standardised NZ$/ha/yr · Sample size · Model specification · Full citation · Update alerts</span>
+    <span class="tier-pill tier-paid">Ecosystem type · ES category · ES sub-type · Standardised NZ$/ha/yr · Sample size · Model spec · Update alerts</span>
   </div>
 </div>
 
@@ -656,15 +656,15 @@
             <th>Author(s)</th>
             <th>Year</th>
             <th>Region</th>
-            <th>Topic</th>
+            <th>Title</th>
             <th>Method</th>
-            <th>Ecosystem type</th>
-            <th>ES category</th>
-            <th>ES sub-type</th>
             <th>WTP value</th>
+            <th>Full citation</th>
+            <th class="th-locked">🔒 Ecosystem type</th>
+            <th class="th-locked">🔒 ES category</th>
+            <th class="th-locked">🔒 ES sub-type</th>
             <th class="th-locked">🔒 NZ$/ha/yr</th>
             <th class="th-locked">🔒 Sample n</th>
-            <th class="th-locked">🔒 Full citation</th>
           </tr>
         </thead>
         <tbody id="nmvBody">
@@ -845,6 +845,7 @@ function renderNMV(data, isDefault = false) {
   const tbody = document.getElementById('nmvBody');
   if (!data.length) {
     tbody.innerHTML = `<tr><td colspan="12" class="empty-state">No studies match your filters. Try broadening your search.</td></tr>`;
+
     document.getElementById('nmvCount').textContent = '0 studies found';
     return;
   }
@@ -856,10 +857,10 @@ function renderNMV(data, isDefault = false) {
       <td class="td-region">${escHtml(s.region)}</td>
       <td class="td-topic">${escHtml(s.topic)}</td>
       <td><span class="badge badge-${s.method}">${s.method}</span></td>
-      <td><span class="eco-badge eco-${s.ecosystem_type}">${s.ecosystem_type}</span></td>
-      <td><span class="es-badge es-${s.es_category}">${s.es_category}</span></td>
-      <td style="font-size:11px;color:var(--ink-mid)">${escHtml(s.es_subtype)}</td>
       <td class="td-wtp">${escHtml(s.wtp_value)}</td>
+      <td style="font-size:11px;color:var(--ink-mid);max-width:200px;line-height:1.4">${escHtml(s.full_citation)}</td>
+      <td>${lockCell()}</td>
+      <td>${lockCell()}</td>
       <td>${lockCell()}</td>
       <td>${lockCell()}</td>
       <td>${lockCell()}</td>
@@ -972,10 +973,10 @@ function downloadCSV(type) {
   let csv = '';
   if (type === 'nmv') {
     const data = NMV_CURRENT.length ? NMV_CURRENT : NMV_ALL.slice(0, DEFAULT_DISPLAY);
-    const headers = ['ID','Author','Year','Region','Topic','Method','Ecosystem type','ES category','ES sub-type','WTP value'];
+    const headers = ['ID','Author','Year','Region','Title','Method','WTP value','Full citation'];
     const rows = data.map(s => [
       s.id, s.author, s.year, s.region, s.topic,
-      s.method, s.ecosystem_type, s.es_category, s.es_subtype, s.wtp_value
+      s.method, s.wtp_value, s.full_citation
     ].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
     csv = [headers.join(','), ...rows].join('\n');
     const label = data.length < NMV_ALL.length ? `filtered-${data.length}` : 'free';
